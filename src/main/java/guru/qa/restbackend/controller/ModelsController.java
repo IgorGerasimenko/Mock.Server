@@ -1,55 +1,91 @@
 package guru.qa.restbackend.controller;
 
-import guru.qa.restbackend.domain.LoginInfo;
-import guru.qa.restbackend.domain.UserInfo;
-import guru.qa.restbackend.exception.InvalidUsernameException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParams;
+import guru.qa.restbackend.domain.ModelInfo;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 import java.util.stream.Collectors;
 
 @RestController
-public class BankController {
+public class ModelsController {
 
-    private Map<String, UserInfo> users = Map.of (
-            "Dima", UserInfo.builder().userName("Dima").build(),
-            "Olga", UserInfo.builder().userName("Olga").build(),
-            "Ivan", UserInfo.builder().userName("Ivan").build()
+    private String modelsPath = "app/models/";
+    private String fileExtension = ".fbx";
+
+    private Map<String, ModelInfo> models = Map.of (
+            "Уфа модель", ModelInfo.builder()
+                    .modelName("Уфа модель")
+                    .modelPath(modelsPath + "Уфа модель" + fileExtension)
+                    .ownerId(2)
+                    .build(),
+            "Корабль", ModelInfo.builder()
+                    .modelName("Корабль")
+                    .modelPath(modelsPath + "Корабль" + fileExtension)
+                    .ownerId(21)
+                    .build(),
+            "Комната 1", ModelInfo.builder()
+                    .modelName("Комната 1")
+                    .modelPath(modelsPath + "Комната 1" + fileExtension)
+                    .ownerId(2)
+                    .build(),
+            "Комната 2", ModelInfo.builder()
+                    .modelName("Комната 2")
+                    .modelPath(modelsPath + "Комната 2" + fileExtension)
+                    .ownerId(8)
+                    .build()
+
     );
 
-    @PostMapping("user/login")
-    @ApiOperation("авторизация")
-    public UserInfo doLogin(@RequestBody LoginInfo loginInfo) {
-        if (loginInfo.getUserName().equals("Dima")) {
-            return UserInfo.builder()
-                    .loginDate(new Date())
-                    .userName(loginInfo.getUserName())
-                    .build();
-        } else {
-            throw new InvalidUsernameException();
-        }
-    }
-
-
-    @GetMapping("user/getAll")
-    @ApiOperation("Получение всех юзеров")
-    public List<UserInfo> getAllUsersInfo() {
-        List <UserInfo> result = new ArrayList<>();
-        for (Map.Entry<String, UserInfo> entry : users.entrySet()) {
+    @GetMapping("models/getAll")
+    @ApiOperation("Получение списка моделей")
+    public List<ModelInfo> getAllModelsInfo() {
+        List <ModelInfo> result = new ArrayList<>();
+        for (Map.Entry<String, ModelInfo> entry : models.entrySet()) {
             result.add(entry.getValue());
         }
-
-
-        return users.entrySet()
+        return models.entrySet()
                 .stream()
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
     }
+
+    @PostMapping("models/add")
+    @ApiOperation("Добавление модели")
+    public ModelInfo addModel(@RequestBody ModelInfo modelInfo) {
+        return ModelInfo.builder()
+                .ownerId(modelInfo.getOwnerId())
+                .modelName(modelInfo.getModelName())
+                .modelPath(modelInfo.getModelPath())
+                .message ("Модель успешно добавлена")
+                .build();
+    }
+
+    @PutMapping("models/put/{oldName}/{newName}")
+    @ApiOperation("Изменение названия модели (заглушка)")
+    public String putModel(@PathVariable String oldName, @PathVariable String newName) {
+        return "Имя модели " + oldName + " успешно изменено на " + newName;
+    }
+
+    @DeleteMapping("models/put/{modelName}")
+    @ApiOperation("Удаление модели (заглушка)")
+    public String deleteModel(@PathVariable String modelName) {
+        return "Модель " + modelName + " успешна удалена";
+    }
+
+    @GetMapping("models/getByName/{modelName}")
+    @ApiOperation("Фильтр списка моделей по имени")
+    public List<ModelInfo> getModelsByName(@PathVariable String modelName) {
+        List <ModelInfo> result = new ArrayList<>();
+        for (Map.Entry<String, ModelInfo> entry : models.entrySet()) {
+            result.add(entry.getValue());
+        }
+        return models.entrySet()
+                .stream()
+                .map(Map.Entry::getValue)
+                .filter(a -> a.getModelName().equals(modelName))
+                .collect(Collectors.toList());
+    }
+
 }

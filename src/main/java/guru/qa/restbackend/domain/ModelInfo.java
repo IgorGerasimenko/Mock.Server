@@ -1,5 +1,6 @@
 package guru.qa.restbackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
@@ -13,9 +14,13 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class UserInfo {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ModelInfo {
 
-    private Date loginDate;
-    private String userName;
+    private String modelPath;
+    private String modelName;
+    private String message;
+    private Integer ownerId;
+    private Integer modelId;
+
 }
