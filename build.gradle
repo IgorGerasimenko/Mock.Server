@@ -4,9 +4,11 @@ plugins {
     id 'java'
 }
 
-group = 'guru.qa'
-version = '0.0.1'
+
+group = 'mock.server'
+version = '0.0.2'
 sourceCompatibility = '11'
+targetCompatibility = '11'
 
 configurations {
     compileOnly {
@@ -21,6 +23,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'org.springframework.boot:spring-boot:2.6.0'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
